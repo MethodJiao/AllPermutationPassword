@@ -102,39 +102,48 @@ vector<char> MakeCharVector() {
     return charVec;
 }
 
+int countNum = 0;
+int fileNum = 0;
 
 void ForeachPass(vector<char> charVec, vector<char> &subVec, int num) {
     num -= 1;
     for (int i = 0; i < charVec.size(); ++i) {
         subVec.push_back(charVec[i]);
         if (num == 0) {
-            for (int j = 0; j < subVec.size(); ++j) {
-                putchar(subVec[j]);
+            for (char j : subVec) {
+                putchar(j);
             }
             putchar('\n');
             subVec.pop_back();
+            countNum += 1;
+            if (countNum == 50000000) {
+                countNum = 0;
+                fileNum += 1;
+                string fileName = "dic" + to_string(fileNum) + ".txt";
+                freopen(fileName.c_str(), "w", stdout);
+            }
             continue;
         }
         ForeachPass(charVec, subVec, num);
         subVec.pop_back();
     }
-    return;
 }
 
 int main() {
     vector<char> charVec = MakeCharVector();
 
-    int miniNum,maxNum;
-    cout<<"输入最小生成长度"<<endl;
-    cin>>miniNum;
-    cout<<"输入最大生成长度"<<endl;
-    cin>>maxNum;
+    int miniNum, maxNum;
+    cout << "输入最小生成长度" << endl;
+    cin >> miniNum;
+    cout << "输入最大生成长度" << endl;
+    cin >> maxNum;
 
     //输出定向，全排列会自动保存在dic.txt中
-    freopen("dic.txt", "w", stdout);
+    string fileName = "dic" + to_string(fileNum) + ".txt";
+    freopen(fileName.c_str(), "w", stdout);
     for (int i = miniNum; i <= maxNum; ++i) {
         vector<char> subVec;
-        ForeachPass(charVec,subVec, i);
+        ForeachPass(charVec, subVec, i);
     }
 
 }
